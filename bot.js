@@ -1,187 +1,182 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-const { ActivityHandler, MessageFactory } = require('botbuilder');
-const { TeamsActivityHandler } = require('botbuilder');
+const {
+    TurnContext,
+    MessageFactory,
+    TeamsInfo,
+    TeamsActivityHandler,
+    CardFactory,
+    ActionTypes
+} = require('botbuilder');
+const TextEncoder = require('util').TextEncoder;
 
-var HttpClient = require('node-rest-client').Client;
-var httpClient = new HttpClient();
-var request = require('request');
-var _=require("underscore");
-class DialogBot extends TeamsActivityHandler {   
-   
+class TeamsConversationBot extends TeamsActivityHandler {
     constructor() {
         super();
-        var args = {
-            data: { username: 'Aafreen_Patel',
-            password: 'remedy'},
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
-          };
-		   var inputText='';
-	       this.onTurn(async (context, next) => {
-
-                      // Continue with further processing.
-			inputText=context.activity.text;
-               
-			   var replyText='';
-            // Handle a "turn" event.
-          
-            console.log(inputText);
-			
-			  if(inputText=='update'){
-				   
-                  replyText='Enter the INC number'
-				  await context.sendActivity(MessageFactory.text(replyText, replyText));
-			  } 
-            await next();
-        }); 
-		
-        // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
-        this.dispatchConversationUpdateActivity(async (context, next) => {
-            var replyText = 'no reply';
-            var INCSuccess= 'N';
-            console.log(context.activity.text);
-            console.log(replyText);
-        
-		if(context.activity.text!='update')
-		{
-            if(context.activity.text=='INC000000003006'){
-                console.log(context.activity.text);
-                //MS Graph API Code
-                request({
-                    url: 'https://login.microsoftonline.com/ac26cf21-c02e-433a-8cca-237e1afccbd1/oauth2/v2.0/token',
-                    method: 'POST',
-                    auth: {
-                      user: '04812a6a-a5cf-4004-94fe-22a4a11c6134',
-                      pass: 'Y0ufVcvSAc4s.8ojYQb2_Ba1R80~2V.C3Z'
-                    },
-                    form: {
-                      'grant_type': 'client_credentials',
-                      'scope':'https://graph.microsoft.com/.default'
-                    }
-                  }, function(err, res) {
-                    var json = JSON.parse(res.body);
-                    console.log("Access Token:", res.statusCode);
-                    var args_update = { 
-                      headers: { 'Authorization' : "Bearer "+json.access_token,
-                      'Content-Type': "application/json"
-                      }
-                    };
-                    httpClient.get("https://graph.microsoft.com/v1.0/users", args_update, function (data, response) {
-                    
-                      var jsonObject=JSON.parse(data);
-                      var id="";
-                      _.map( jsonObject, function(content) {
-                          _.map(content,function(data){
-                             if(data.mail === "rasmiawsact02@gmail.com")
-                                id=  data.id;      
-                             })
-                        })
-
-                        var teamId="";
-                        httpClient.get("https://graph.microsoft.com/v1.0/users/"+id+"/joinedTeams", args_update, function (data1, response1) {
-                          var jsonObject1=JSON.parse(data1);
-                          _.map( jsonObject1, function(content) {
-                              _.map(content,function(data){
-                                 if(data.displayName === "CPA_POC")
-                                 teamId=  data.id;      
-                                 })
-                            })
-                            console.log("team Id::"+teamId)
-                       
-                     var channelId="";
-                     httpClient.get("https://graph.microsoft.com/v1.0/teams/" + teamId + "/channels", args_update, function (data2, response2) {
-                      var jsonObject2=JSON.parse(data2);
-                      _.map( jsonObject2, function(content) {
-                          _.map(content,function(data){
-                             if(data.displayName === "Incident_Query")
-                             channelId=  data.id;      
-                             })
-                        })
-                        console.log("channel Id::"+channelId)
-                  var displayName="";
-                  
-                  httpClient.get("https://graph.microsoft.com/beta/teams/" + teamId + "/channels/" + channelId + "/messages", args_update, function (data3, response3) {
-                          var contents="";
-                          var jsonObject3=JSON.parse(data3);
-                          _.map( jsonObject3.value, function(content) {
-                              _.map(content.from,function(data){  
-                                if(JSON.stringify(data) != 'null')            
-                                 contents=contents.concat(JSON.stringify(data.displayName));
-                                 })
-                                 _.map(content.body,function(data1){ 
-                                  var jsonObject4=content.body;
-                                  if(data1==="text")  { 
-                                  contents=contents.concat(': ',JSON.stringify(jsonObject4.content)+"\n");
-                  
-                                  }
-                               //  }
-                                })
-                            })
-                                // Remedy Code
-                httpClient.post("http://vtrvitstp-03:8008/api/jwt/login", args, function (data, response) {
-                    console.log("statuscode :"+response.statusCode);
-                var args_update = {
-                    data: { "values": {
-                    "z1D_Details": contents,
-                    "z1D_WorklogDetails": "testing update for poc",
-                    "z1D Action": "MODIFY",
-                    "z1D_View_Access": "Internal",
-                    "z1D_Secure_Log": "Yes",
-                    "z1D_Activity_Type": "Incident Task/Action",
-                    "Detailed Decription": "Updated description",
-                    "Resolution": "User Request has been serviced",
-                    "Urgency" : "3-Medium"
-                    }},
-                    headers: { 'Authorization' : "AR-JWT "+data,
-                    'Content-Type': "application/json"
-                    }
-                };
-                
-                httpClient.put("http://VTRVITSTP-03:8008/api/arsys/v1/entry/HPD:IncidentInterface/INC000000002108%7CINC000000002108", args_update, function (data, response) {
-                console.log("final statuscode :"+response.statusCode);            
-                console.log(response.headers);
-                if(response.statusCode == '204'){
-                    INCSuccess='Y';
-                }
-               
-                });
-    
-                });
-                           
-                      }); 
-                    });  
-                   });
-                   });
-                  
-                  });
-
-
-         replyText=`${context.activity.text } Updated Successfully`;
-            
-			 await context.sendActivity(MessageFactory.text(replyText, replyText));
-        }
-		}
-           
-            // By calling next() you ensure that the next BotHandler is run.
-            await next();
+        this.onMessage(async (context, next) => {
+            TurnContext.removeRecipientMention(context.activity);
+            const text = context.activity.text.trim().toLocaleLowerCase();
+            if (text.includes('mention')) {
+                await this.mentionActivityAsync(context);
+            } else if (text.includes('update')) {
+                await this.cardActivityAsync(context, true);
+            } else if (text.includes('delete')) {
+                await this.deleteCardActivityAsync(context);
+            } else if (text.includes('message')) {
+                await this.messageAllMembersAsync(context);
+            } else if (text.includes('who')) {
+                await this.getSingleMember(context);
+            } else {
+                await this.cardActivityAsync(context, false);
+            }
         });
 
-this.onMembersAdded(async (context, next) => {
-           const membersAdded = context.activity.membersAdded;
-           const welcomeText = 'Hello and welcome!';
-           for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
-               if (membersAdded[cnt].id !== context.activity.recipient.id) {
-                   await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
-              }
-           }
-           // By calling next() you ensure that the next BotHandler is run.
-           await next();
-       });
-       
+        this.onMembersAddedActivity(async (context, next) => {
+            context.activity.membersAdded.forEach(async (teamMember) => {
+                if (teamMember.id !== context.activity.recipient.id) {
+                    await context.sendActivity(`Welcome to the team ${ teamMember.givenName } ${ teamMember.surname }`);
+                }
+            });
+            await next();
+        });
     }
-	
 
+    async cardActivityAsync(context, isUpdate) {
+        const cardActions = [
+            {
+                type: ActionTypes.MessageBack,
+                title: 'Message all members',
+                value: null,
+                text: 'MessageAllMembers'
+            },
+            {
+                type: ActionTypes.MessageBack,
+                title: 'Who am I?',
+                value: null,
+                text: 'whoami'
+            },
+            {
+                type: ActionTypes.MessageBack,
+                title: 'Delete card',
+                value: null,
+                text: 'Delete'
+            }
+        ];
+
+        if (isUpdate) {
+            await this.sendUpdateCard(context, cardActions);
+        } else {
+            await this.sendWelcomeCard(context, cardActions);
+        }
+    }
+
+    async sendUpdateCard(context, cardActions) {
+        const data = context.activity.value;
+        data.count += 1;
+        cardActions.push({
+            type: ActionTypes.MessageBack,
+            title: 'Update Card',
+            value: data,
+            text: 'UpdateCardAction'
+        });
+        const card = CardFactory.heroCard(
+            'Updated card',
+            `Update count: ${ data.count }`,
+            null,
+            cardActions
+        );
+        card.id = context.activity.replyToId;
+        const message = MessageFactory.attachment(card);
+        message.id = context.activity.replyToId;
+        await context.updateActivity(message);
+    }
+
+    async sendWelcomeCard(context, cardActions) {
+        const initialValue = {
+            count: 0
+        };
+        cardActions.push({
+            type: ActionTypes.MessageBack,
+            title: 'Update Card',
+            value: initialValue,
+            text: 'UpdateCardAction'
+        });
+        const card = CardFactory.heroCard(
+            'Welcome card',
+            '',
+            null,
+            cardActions
+        );
+        await context.sendActivity(MessageFactory.attachment(card));
+    }
+
+    async getSingleMember(context) {
+        var member;
+        try {
+            member = await TeamsInfo.getMember(context, context.activity.from.id);
+        } catch (e) {
+            if (e.code === 'MemberNotFoundInConversation') {
+                context.sendActivity(MessageFactory.text('Member not found.'));
+                return;
+            } else {
+                console.log(e);
+                throw e;
+            }
+        }
+        const message = MessageFactory.text(`You are: ${ member.name }`);
+        await context.sendActivity(message);
+    }
+
+    async mentionActivityAsync(context) {
+        const mention = {
+            mentioned: context.activity.from,
+            text: `<at>${ new TextEncoder().encode(context.activity.from.name) }</at>`,
+            type: 'mention'
+        };
+
+        const replyActivity = MessageFactory.text(`Hi ${ mention.text }`);
+        replyActivity.entities = [mention];
+        await context.sendActivity(replyActivity);
+    }
+
+    async deleteCardActivityAsync(context) {
+        await context.deleteActivity(context.activity.replyToId);
+    }
+
+    // If you encounter permission-related errors when sending this message, see
+    // https://aka.ms/BotTrustServiceUrl
+    async messageAllMembersAsync(context) {
+        const members = await this.getPagedMembers(context);
+
+        members.forEach(async (teamMember) => {
+            const message = MessageFactory.text(`Hello ${ teamMember.givenName } ${ teamMember.surname }. I'm a Teams conversation bot.`);
+
+            var ref = TurnContext.getConversationReference(context.activity);
+            ref.user = teamMember;
+
+            await context.adapter.createConversation(ref,
+                async (t1) => {
+                    const ref2 = TurnContext.getConversationReference(t1.activity);
+                    await t1.adapter.continueConversation(ref2, async (t2) => {
+                        await t2.sendActivity(message);
+                    });
+                });
+        });
+
+        await context.sendActivity(MessageFactory.text('All messages have been sent.'));
+    }
+
+    async getPagedMembers(context) {
+        var continuationToken;
+        var members = [];
+        do {
+            var pagedMembers = await TeamsInfo.getPagedMembers(context, 100, continuationToken);
+            continuationToken = pagedMembers.continuationToken;
+            members.push(...pagedMembers.members);
+        } while (continuationToken !== undefined);
+        return members;
+    }
 }
 
-module.exports.DialogBot = DialogBot;
+module.exports.TeamsConversationBot = TeamsConversationBot;
