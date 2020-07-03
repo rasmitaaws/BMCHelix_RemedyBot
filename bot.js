@@ -19,15 +19,15 @@ class DialogBot extends TeamsActivityHandler {
           };
 		  
 	       this.onTurn(async (context, next) => {
-+
-+            context.activity.text='Heloow Welcome';
-+            // Handle a "turn" event.
-+            await context.sendActivity(`${ context.activity.type } activity received.`);
-+            // Continue with further processing.
-+
-+
-+            await next();
-+        });
+
+          context.activity.text='Heloow Welcome';
+		  // Handle a "turn" event.
+           await context.sendActivity(`${ context.activity.type } activity received.`);
+            // Continue with further processing.
+
+
+           await next();
+		   });
 
 		
 
