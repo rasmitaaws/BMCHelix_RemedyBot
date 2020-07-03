@@ -17,14 +17,14 @@ class DialogBot extends TeamsActivityHandler {
             password: 'remedy'},
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           };
-		  
+		   var inputText='';
 	       this.onTurn(async (context, next) => {
 
-            
+          
             // Handle a "turn" event.
             await context.sendActivity(`${ context.activity.type } activity received.`);
             // Continue with further processing.
-
+			inputText=context.activity.text;
             
             await next();
         });
@@ -55,7 +55,7 @@ class DialogBot extends TeamsActivityHandler {
             var INCSuccess= 'N';
             console.log(context.activity.text);
             console.log(replyText);
-          if(context.activity.text=='update'){
+          if(inputText=='update'){
                 replyText='Enter the INC number'
 
             }else if(context.activity.text=='INC000000003006'){
