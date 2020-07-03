@@ -37,7 +37,7 @@ class DialogBot extends TeamsActivityHandler {
         }); 
 		
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
-        this.onMessage(async (context, next) => {
+        this.dispatchConversationUpdateActivity(async (context, next) => {
             var replyText = 'no reply';
             var INCSuccess= 'N';
             console.log(context.activity.text);
