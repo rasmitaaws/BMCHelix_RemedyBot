@@ -22,10 +22,21 @@ class DialogBot extends TeamsActivityHandler {
 
                       // Continue with further processing.
 			inputText=context.activity.text;
-
+               
+			   var replyText='';
             // Handle a "turn" event.
-            await context.sendActivity(`${ context.activity.type } activity received.`);
+          
             console.log(inputText);
+			
+			  if(inputText=='update'){
+				   
+                  replyText='Enter the INC number'
+				 await context.sendActivity(MessageFactory.text(replyText, replyText));
+		  }
+		  
+		   
+		   
+		    
             await next();
         });
 
@@ -34,11 +45,11 @@ class DialogBot extends TeamsActivityHandler {
            inputText=context.activity.text;
             var replyText = 'no input111';
             var INCSuccess= 'N';
-            console.log(context.activity.text);
+            console.log(inputText);
             console.log(replyText);
             if(context.activity.text == 'hey'){
                 replyText = 'Hey wassup';
-            }else if(context.activity.text=='update'){
+            }else if(inputText=='update'){
                 replyText='Enter the INC number';
 
             }
@@ -51,14 +62,12 @@ class DialogBot extends TeamsActivityHandler {
 		
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            var replyText = '';
+            var replyText = 'no reply';
             var INCSuccess= 'N';
             console.log(context.activity.text);
             console.log(replyText);
-          if(inputText=='update'){
-                replyText='Enter the INC number'
-
-            }else if(context.activity.text=='INC000000003006'){
+        
+            if(context.activity.text=='INC000000003006'){
                 console.log(context.activity.text);
                 //MS Graph API Code
                 request({
@@ -170,12 +179,12 @@ class DialogBot extends TeamsActivityHandler {
                   });
 
 
-         replyText=`${ context.activity.text } Updated Successfully`;
+         replyText=`${context.activity.text } Updated Successfully`;
             
-        }else{            
-            replyText = `Echo: ${ context.activity.text }`;
-            }
-            await context.sendActivity(MessageFactory.text(replyText, replyText));
+			 await context.sendActivity(MessageFactory.text(replyText, replyText));
+        }
+	
+           
             // By calling next() you ensure that the next BotHandler is run.
             await next();
         });
