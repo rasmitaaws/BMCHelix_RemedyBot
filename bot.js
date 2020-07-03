@@ -20,7 +20,7 @@ class DialogBot extends TeamsActivityHandler {
 		  
 	       this.onTurn(async (context, next) => {
 
-            context.activity.text='update';
+            
             // Handle a "turn" event.
             await context.sendActivity(`${ context.activity.type } activity received.`);
             // Continue with further processing.
@@ -32,7 +32,7 @@ class DialogBot extends TeamsActivityHandler {
         this.dispatchConversationUpdateActivity(
         async (context, next) => {
 
-            var replyText = 'no input';
+            var replyText = 'no input111';
             var INCSuccess= 'N';
             console.log(context.activity.text);
             console.log(replyText);
@@ -51,13 +51,11 @@ class DialogBot extends TeamsActivityHandler {
 		
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            var replyText = 'no input';
+            var replyText = '';
             var INCSuccess= 'N';
             console.log(context.activity.text);
             console.log(replyText);
-            if(context.activity.text == 'hey'){
-                replyText = 'Hey wassup';
-            }else if(context.activity.text=='update'){
+          if(context.activity.text=='update'){
                 replyText='Enter the INC number'
 
             }else if(context.activity.text=='INC000000003006'){
