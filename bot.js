@@ -31,34 +31,10 @@ class DialogBot extends TeamsActivityHandler {
 			  if(inputText=='update'){
 				   
                   replyText='Enter the INC number'
-				 await context.sendActivity(MessageFactory.text(replyText, replyText));
-		  }
-		  
-		   
-		   
-		    
+				  await context.sendActivity(MessageFactory.text(replyText, replyText));
+			  } 
             await next();
-        });
-
-        this.dispatchConversationUpdateActivity(
-        async (context, next) => {
-           inputText=context.activity.text;
-            var replyText = 'no input111';
-            var INCSuccess= 'N';
-            console.log(inputText);
-            console.log(replyText);
-            if(context.activity.text == 'hey'){
-                replyText = 'Hey wassup';
-            }else if(inputText=='update'){
-                replyText='Enter the INC number';
-
-            }
-            else{
-                replyText='Sorry';
-            }
-            
-            await next();
-        });; 
+        }); 
 		
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
@@ -67,6 +43,8 @@ class DialogBot extends TeamsActivityHandler {
             console.log(context.activity.text);
             console.log(replyText);
         
+		if(context.activity.text!='update')
+		{
             if(context.activity.text=='INC000000003006'){
                 console.log(context.activity.text);
                 //MS Graph API Code
@@ -183,7 +161,7 @@ class DialogBot extends TeamsActivityHandler {
             
 			 await context.sendActivity(MessageFactory.text(replyText, replyText));
         }
-	
+		}
            
             // By calling next() you ensure that the next BotHandler is run.
             await next();
