@@ -20,18 +20,18 @@ class DialogBot extends TeamsActivityHandler {
 		   var inputText='';
 	       this.onTurn(async (context, next) => {
 
-          
+                      // Continue with further processing.
+			inputText=context.activity.text;
+
             // Handle a "turn" event.
             await context.sendActivity(`${ context.activity.type } activity received.`);
-            // Continue with further processing.
-			inputText=context.activity.text;
-            
+            console.log(inputText);
             await next();
         });
 
         this.dispatchConversationUpdateActivity(
         async (context, next) => {
-
+           inputText=context.activity.text;
             var replyText = 'no input111';
             var INCSuccess= 'N';
             console.log(context.activity.text);
