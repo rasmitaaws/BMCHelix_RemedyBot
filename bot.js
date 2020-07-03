@@ -18,17 +18,17 @@ class DialogBot extends TeamsActivityHandler {
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           };
 		  
-		   this.onMembersAdded(async (context, next) => {
-            const membersAdded = context.activity.membersAdded;
-            const welcomeText = 'Hello and welcome!';
-            for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
-                if (membersAdded[cnt].id !== context.activity.recipient.id) {
-                    await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
-                }
-            }
-            // By calling next() you ensure that the next BotHandler is run.
-            await next();
-        });
+	       this.onTurn(async (context, next) => {
++
++            context.activity.text='Heloow Welcome';
++            // Handle a "turn" event.
++            await context.sendActivity(`${ context.activity.type } activity received.`);
++            // Continue with further processing.
++
++
++            await next();
++        });
+
 		
 
         this.dispatchConversationUpdateActivity(
