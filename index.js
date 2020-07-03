@@ -15,7 +15,7 @@ const restify = require('restify');
 const { BotFrameworkAdapter } = require('botbuilder');
 
 // This bot's main dialog.
-const { EchoBot } = require('./bot');
+const { DialogBot } = require('./bot');
 
 // Create HTTP server
 const server = restify.createServer();
@@ -56,7 +56,9 @@ const onTurnErrorHandler = async (context, error) => {
 adapter.onTurnError = onTurnErrorHandler;
 
 // Create the main dialog.
-const myBot = new EchoBot();
+// Create the main dialog.
+const myBot = new DialogBot();
+
 
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {

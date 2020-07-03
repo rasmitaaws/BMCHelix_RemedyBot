@@ -2,11 +2,13 @@
 // Licensed under the MIT License.
 
 const { ActivityHandler, MessageFactory } = require('botbuilder');
+const { TeamsActivityHandler } = require('botbuilder');
+
 var HttpClient = require('node-rest-client').Client;
 var httpClient = new HttpClient();
 var request = require('request');
 var _=require("underscore");
-class EchoBot extends ActivityHandler {
+class DialogBot extends TeamsActivityHandler {   
    
     constructor() {
         super();
@@ -15,6 +17,39 @@ class EchoBot extends ActivityHandler {
             password: 'remedy'},
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
           };
+		  
+		  
+		  this.onTurn(async (context, next) => {
+
+            context.activity.text='update';
+            // Handle a "turn" event.
+            await context.sendActivity(`${ context.activity.type } activity received.`);
+            // Continue with further processing.
+
+            
+            await next();
+        });
+
+        this.dispatchConversationUpdateActivity(
+        async (context, next) => {
+
+            var replyText = 'no input';
+            var INCSuccess= 'N';
+            console.log(context.activity.text);
+            console.log(replyText);
+            if(context.activity.text == 'hey'){
+                replyText = 'Hey wassup';
+            }else if(context.activity.text=='update'){
+                replyText='Enter the INC number';
+
+            }
+            else{
+                replyText='Sorry';
+            }
+            
+            await next();
+        });
+		
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
             var replyText = 'no input';
@@ -162,4 +197,4 @@ class EchoBot extends ActivityHandler {
     }
 }
 
-module.exports.EchoBot = EchoBot;
+module.exports.DialogBot = DialogBot;
