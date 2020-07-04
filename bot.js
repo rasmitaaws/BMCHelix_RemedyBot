@@ -23,11 +23,17 @@ class TeamsConversationBot extends TeamsActivityHandler {
 
         });
 
-        this.OnTeamsMembersAddedEvent(async (context, next) => {
-            await this.sendWelcomeMessage(context)
-            // By calling next() you ensure that the next BotHandler is run.
+        
+
+        this.onMembersAddedActivity(async (context, next) => {
+            context.activity.membersAdded.forEach(async (teamMember) => {
+                if (teamMember.id !== context.activity.recipient.id) {
+                    await context.sendActivity(`Welcome to the team ${ teamMember.givenName } ${ teamMember.surname }`);
+                }
+            });
             await next();
         });
+     
     }
 
     async sendWelcomeMessage(turnContext) {
