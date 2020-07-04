@@ -16,14 +16,16 @@ class TeamsConversationBot extends TeamsActivityHandler {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            if (context.activity.text=='update') {
+
+            const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
+            if (modifiedText=='update1') {
 
                 // Send a message with an @Mention
                 await context.sendActivity(`Enetr INC nUMBER`);
  
-            } else if(context.activity.text.startsWith('INC')){
+            } else if(modifiedText.startsWith('INC')){
                // Otherwise we send a normal echo
-              await context.sendActivity(`You said '${ context.activity.text }'`);
+              await context.sendActivity(`You said '${ context.activity.recipient.id}'`);
            }
             await next();
         });
