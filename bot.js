@@ -25,7 +25,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
             } else {
                 
                 // Otherwise we send a normal echo
-                await context.sendActivity(`You said '${ context.activity.text }'`);
+                await context.sendActivity(`You said '${ context.activity.channelId }'`);
             }
             await next();
 
