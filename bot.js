@@ -16,28 +16,20 @@ class TeamsConversationBot extends TeamsActivityHandler {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
+            if (context.activity.text=='update') {
 
-            if (context.activity.channelId === 'Incident_Query') {
-        
                 // Send a message with an @Mention
-                await context.sendActivity(`You said '${ context.activity.channelId }'`);
-
-            } else {
-                
-                // Otherwise we send a normal echo
-                await context.sendActivity(`You said '${ context.activity.channelId }'`);
-            }
+                await context.sendActivity(`Enetr INC nUMBER`);
+ 
+            } else if(context.activity.text.startsWith('INC')){
+               // Otherwise we send a normal echo
+              await context.sendActivity(`You said '${ context.activity.text }'`);
+           }
             await next();
-
         });
 
-        
-
-     
+      
     }
 
-  
-
 }
-
 module.exports.TeamsConversationBot = TeamsConversationBot;
