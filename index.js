@@ -15,7 +15,7 @@ const restify = require('restify');
 const { BotFrameworkAdapter } = require('botbuilder');
 
 // This bot's main dialog.
-const { DialogBot } = require('./bot');
+const { TeamsConversationBot } = require('./bot');
 
 // Create HTTP server
 const server = restify.createServer();
@@ -57,7 +57,7 @@ adapter.onTurnError = onTurnErrorHandler;
 
 // Create the main dialog.
 // Create the main dialog.
-const myBot = new DialogBot();
+const myBot = new TeamsConversationBot();
 
 
 // Listen for incoming requests.
