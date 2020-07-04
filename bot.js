@@ -16,43 +16,28 @@ class TeamsConversationBot extends TeamsActivityHandler {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            const replyText = `Echo: ${context.activity.text}`;
-            await context.sendActivity(MessageFactory.text(replyText, replyText));
-            // By calling next() you ensure that the next BotHandler is run.
+
+            if (context.activity.channelId === 'Incident_Query') {
+        
+                // Send a message with an @Mention
+                await context.sendActivity(`You said '${ context.activity.channelId }'`);
+
+            } else {
+                
+                // Otherwise we send a normal echo
+                await context.sendActivity(`You said '${ context.activity.text }'`);
+            }
             await next();
 
         });
 
         
 
-        this.onMembersAddedActivity(async (context, next) => {
-            context.activity.membersAdded.forEach(async (teamMember) => {
-                if (teamMember.id !== context.activity.recipient.id) {
-                    await context.sendActivity(`Welcome to the team ${ teamMember.givenName } ${ teamMember.surname }`);
-                }
-            });
-            await next();
-        });
      
     }
 
-    async sendWelcomeMessage(turnContext) {
-        const { activity } = turnContext;
+  
 
-        // Iterate over all new members added to the conversation.
-        for (const idx in activity.membersAdded) {
-            if (activity.membersAdded[idx].id !== activity.recipient.id) {
-                const welcomeMessage = `Welcome to Restaurant Reservation Bot ${ activity.membersAdded[idx].name }. `;
-                await turnContext.sendActivity(welcomeMessage);
-                await this.sendSuggestedActions(turnContext);
-            }
-        }
-    }
-
-    async sendSuggestedActions(turnContext) {
-        var reply = MessageFactory.suggestedActions(['Make Reservation','Cancel Reservation','Restaurant Address'],'What would you like to do today ?');
-        await turnContext.sendActivity(reply);
-    }
 }
 
 module.exports.TeamsConversationBot = TeamsConversationBot;
