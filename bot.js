@@ -25,7 +25,9 @@ class TeamsConversationBot extends TeamsActivityHandler {
  
             } else if(modifiedText.startsWith('INC')){
                // Otherwise we send a normal echo
-              await context.sendActivity(`You said '${ context.activity.recipient.id}'`);
+
+               const channels = await TeamsInfo.getTeamChannels(context);
+              await context.sendActivity(`Your cahnnel '${channels.id}'`);
            }
             await next();
         });
