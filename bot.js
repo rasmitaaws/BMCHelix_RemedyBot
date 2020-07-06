@@ -34,8 +34,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                const channels = await TeamsInfo.getTeamChannels(context,teamId);
             
             
-               
-               const cahnel_details=channels.
+   
                var channeldetails='';
                channels.forEach(element => {
                 channeldetails+=element.id;
