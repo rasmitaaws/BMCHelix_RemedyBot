@@ -45,7 +45,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                
 
 
-              await context.sendActivity(`Your cahnnel '${JSON.stringify(context.activity.teamId)}' '${context.activity.channelId}' `);
+              await context.sendActivity(`Your cahnnel '${JSON.stringify(context.activity.callerId)}' '${context.activity.channelId}' `);
            }
             await next();
         });
