@@ -9,6 +9,8 @@ const {
     CardFactory,
     ActionTypes} = require('botbuilder');
 
+    var _=require('underscore');
+
 const TextEncoder = require('util').TextEncoder;
 
 class TeamsConversationBot extends TeamsActivityHandler {
@@ -29,7 +31,15 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 
                const channels = await TeamsInfo.getTeamChannels(context,teamId);
                
-              await context.sendActivity(`Your cahnnel '${channels.length}' '${teamId}' `);
+               var channeldetails='';
+               channels.forEach(element => {
+                channeldetails+=element;
+               });
+
+             
+
+
+              await context.sendActivity(`Your cahnnel '${channeldetails}' '${teamId}' `);
            }
             await next();
         });
