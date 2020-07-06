@@ -34,7 +34,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                
             
                const channels = await TeamsInfo.getTeamChannels(context,teamId);
-            
+               const teamDetails = await TeamsInfo.getTeamDetails(context);
             
    
                var channeldetails='';
@@ -45,7 +45,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
              
 
 
-              await context.sendActivity(`Your cahnnel '${JSON.stringify(channeldetails)}' '${TeamsInfo.getTeamDetails(context).id}' `);
+              await context.sendActivity(`Your cahnnel '${JSON.stringify(channeldetails)}' '${(await TeamsInfo.getTeamDetails(context)).id}' `);
            }
             await next();
         });
