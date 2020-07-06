@@ -29,6 +29,8 @@ class TeamsConversationBot extends TeamsActivityHandler {
                // Otherwise we send a normal echo
                const teamId = await TeamsInfo.getTeamId(context);
                 
+               
+            
                const channels = await TeamsInfo.getTeamChannels(context,teamId);
                
                var channeldetails='';
@@ -39,7 +41,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
              
 
 
-              await context.sendActivity(`Your cahnnel '${channeldetails.toString}' '${teamId}' `);
+              await context.sendActivity(`Your cahnnel '${JSON.stringify(channeldetails)}' '${teamId}' `);
            }
             await next();
         });
