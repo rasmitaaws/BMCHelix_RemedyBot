@@ -26,6 +26,8 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 await context.sendActivity(`Enetr INC nUMBER`);
  
             } else if(modifiedText.startsWith('INC')){
+
+                
                // Otherwise we send a normal echo
                const teamId = await TeamsInfo.getTeamId(context);
                 
@@ -43,7 +45,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
              
 
 
-              await context.sendActivity(`Your cahnnel '${JSON.stringify(channeldetails)}' '${teamId}' `);
+              await context.sendActivity(`Your cahnnel '${JSON.stringify(channeldetails)}' '${TeamsInfo.getTeamDetails(context).id}' `);
            }
             await next();
         });
