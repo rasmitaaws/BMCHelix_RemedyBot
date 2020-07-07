@@ -32,9 +32,17 @@ class TeamsConversationBot extends TeamsActivityHandler {
         this.onMessage(async (context, next) => {
 
             
-           
+            var continuationToken;
+            var members = [];
 
-           const member = await TeamsInfo.getMember(context, context.activity.conversation.id);
+            do {
+                var pagedMembers = await TeamsInfo.getPagedMembers(context, 100, continuationToken);
+                continuationToken = pagedMembers.continuationToken;
+                members.push(...pagedMembers.members);
+            }
+            while(continuationToken !== undefined)
+
+           const member = await TeamsInfo.getMember(context, context.activity.conversation.aadObjectId);
           
 
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
