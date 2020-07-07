@@ -26,25 +26,15 @@ class TeamsConversationBot extends TeamsActivityHandler {
    
     this.userState = userState;
 
+   
 
     
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
 
-            
-            var continuationToken;
-            var members = [];
+              
 
-            do {
-                var pagedMembers = await TeamsInfo.getPagedMembers(context, 100, continuationToken);
-                continuationToken = pagedMembers.continuationToken;
-                members.push(...pagedMembers.members);
-            }
-            while(continuationToken !== undefined)
-
-           const member = await TeamsInfo.getMember(context, context.activity.conversation.aadObjectId);
-          
-
+           
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
             const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
                // (and only the first time) a user initiates a personal chat with your bot.
@@ -63,7 +53,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 switch (modifiedText) {
                 case 'hello':
                 case 'hi':
-                    await context.sendActivity(`You said "${ member.email }"`);
+                    await context.sendActivity(`You said "${ modifiedText }"`);
                     break;
                 case 'update1':
                     await this.testTeams(context);
@@ -147,8 +137,10 @@ this.onMembersAdded(async (context, next) => {
         const activity = context.activity;
         const connector = context.adapter.createConnectorClient(activity.serviceUrl);
         const response = await connector.conversations.getConversationMembers(activity.conversation.id);
-        const email = response[0].email
-        await context.sendActivity(email);
+        
+        await context.sendActivity(response);
     }
+
+    
 }
 module.exports.TeamsConversationBot = TeamsConversationBot;
