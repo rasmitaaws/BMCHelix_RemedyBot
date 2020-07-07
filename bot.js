@@ -23,9 +23,17 @@ class TeamsConversationBot extends TeamsActivityHandler {
     // See https://aka.ms/about-bot-state-accessors to learn more about the bot state and state accessors.
     this.welcomedUserProperty = userState.createProperty(WELCOMED_USER);
 
+   
     this.userState = userState;
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
+
+            
+
+           
+           
+
+
 
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
             const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
@@ -49,7 +57,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                     break;
                 case 'update1':
 
-                    await context.sendActivity(`Your cahnnel '${context.activity.serviceUrl}'`);
+                    await context.sendActivity(`Your cahnnel '${context.activity.from.name}'`);
                     break;
                 case 'help':
                     await this.sendIntroCard(context);
