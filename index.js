@@ -12,7 +12,7 @@ const restify = require('restify');
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
-const { BotFrameworkAdapter } = require('botbuilder');
+const { BotFrameworkAdapter, UserState, MemoryStorage } = require('botbuilder');
 
 // This bot's main dialog.
 const { TeamsConversationBot } = require('./bot');
@@ -55,9 +55,12 @@ const onTurnErrorHandler = async (context, error) => {
 // Set the onTurnError for the singleton BotFrameworkAdapter.
 adapter.onTurnError = onTurnErrorHandler;
 
+
+const memoryStorage = new MemoryStorage();
+const userState = new UserState(memoryStorage);
 // Create the main dialog.
 // Create the main dialog.
-const myBot = new TeamsConversationBot();
+const myBot = new TeamsConversationBot(userState);
 
 
 // Listen for incoming requests.
