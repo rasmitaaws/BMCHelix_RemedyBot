@@ -142,7 +142,7 @@ this.onMembersAdded(async (context, next) => {
         let emailad='';
         response.forEach(element => {
             
-            if(activity.from.name.toLowerCase===element.name.toLowerCase)
+            if(activity.from.id===element.id)
             {
                 emailad=element.email;
 
