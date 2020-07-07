@@ -57,7 +57,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                     await context.sendActivity(`You said "${ modifiedText }"`);
                     break;
                 case 'update1':
-                    await context.sendActivity(`Your id "${context.activity.from.id }"`);;
+                    await this.testTeams(context);
                     break;
                 case 'help':
                     await this.sendIntroCard(context);
@@ -138,8 +138,20 @@ this.onMembersAdded(async (context, next) => {
         const activity = context.activity;
         const connector = context.adapter.createConnectorClient(activity.serviceUrl);
         const response = await connector.conversations.getConversationMembers(activity.conversation.id);
-        const email = response[0].email
-        await context.sendActivity(email);
+
+        let emailad='';
+        response.forEach(element => {
+            
+            if(activity.from.name.toLowerCase===element.name.toLowerCase)
+            {
+                emailad=element.email;
+
+                
+            }
+        });
+        
+     
+        await context.sendActivity(emailad);
     }
 
     
