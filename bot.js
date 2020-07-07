@@ -7,6 +7,7 @@ const {
     TeamsInfo,
     TeamsActivityHandler,
     CardFactory,
+    
     ActionTypes} = require('botbuilder');
 
    
@@ -56,7 +57,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                     await context.sendActivity(`You said "${ modifiedText }"`);
                     break;
                 case 'update1':
-                    await this.testTeams(context);
+                    await context.sendActivity(`Your id "${context.activity.from.id }"`);;
                     break;
                 case 'help':
                     await this.sendIntroCard(context);
@@ -137,8 +138,8 @@ this.onMembersAdded(async (context, next) => {
         const activity = context.activity;
         const connector = context.adapter.createConnectorClient(activity.serviceUrl);
         const response = await connector.conversations.getConversationMembers(activity.conversation.id);
-        
-        await context.sendActivity(response);
+        const email = response[0].email
+        await context.sendActivity(email);
     }
 
     
