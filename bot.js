@@ -28,12 +28,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
 
-            
-
            
-           
-
-
 
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
             const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
@@ -57,7 +52,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                     break;
                 case 'update1':
 
-                    await context.sendActivity(`Your cahnnel '${context.activity.from.name}'`);
+                    await this.testTeams(context);
                     break;
                 case 'help':
                     await this.sendIntroCard(context);
@@ -106,9 +101,6 @@ this.onMembersAdded(async (context, next) => {
         await this.userState.saveChanges(context);
     }
 
-
-
-
     async sendIntroCard(context) {
         const card = CardFactory.heroCard(
             'Welcome to Bot Framework!',
@@ -136,5 +128,13 @@ this.onMembersAdded(async (context, next) => {
         await context.sendActivity({ attachments: [card] });
     }
 
+
+    async testTeams(context) {
+        const activity = context.activity;
+        const connector = context.adapter.createConnectorClient(activity.serviceUrl);
+        const response = await connector.conversations.getConversationMembers(activity.conversation.id);
+        const email = response[0].email;
+        await context.sendActivity(email);
+    }
 }
 module.exports.TeamsConversationBot = TeamsConversationBot;
