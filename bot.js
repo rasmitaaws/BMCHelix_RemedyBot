@@ -25,6 +25,16 @@ class TeamsConversationBot extends TeamsActivityHandler {
 
    
     this.userState = userState;
+
+
+    this.onConversationUpdate(async (context, next) => {
+        
+        const conversationReference = TurnContext.getConversationReference(context.activity);
+        await context.sendActivity(`You said "${conversationReference.email}"`);
+        await next();
+    });
+
+    
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
 
@@ -133,7 +143,7 @@ this.onMembersAdded(async (context, next) => {
         const activity = context.activity;
         const connector = context.adapter.createConnectorClient(activity.serviceUrl);
         const response = await connector.conversations.getConversationMembers(activity.conversation.id);
-        const email = response[0].email;
+        const email = response[0].email
         await context.sendActivity(email);
     }
 }
