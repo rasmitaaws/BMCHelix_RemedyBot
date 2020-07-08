@@ -12,7 +12,7 @@ const {
 
    
     var _=require('underscore');
-
+ 
 const TextEncoder = require('util').TextEncoder;
 // Welcomed User property name
 const WELCOMED_USER = 'welcomedUserProperty';
@@ -34,7 +34,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
         this.onMessage(async (context, next) => {
 
               
-
+            const teamDetails = await TeamsInfo.getTeamDetails(context);
            
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
             const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
@@ -54,7 +54,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 switch (modifiedText) {
                 case 'hello':
                 case 'hi':
-                    await context.sendActivity(`You said "${ modifiedText }"`);
+                    await context.sendActivity(`You said "${ teamDetails.name }"`);
                     break;
                 case 'update1':
                     await this.testTeams(context);
@@ -135,18 +135,20 @@ this.onMembersAdded(async (context, next) => {
 
 
     async testTeams(context) {
+
         const activity = context.activity;
+
         const connector = context.adapter.createConnectorClient(activity.serviceUrl);
+
         const response = await connector.conversations.getConversationMembers(activity.conversation.id);
 
         let emailad='';
+
         response.forEach(element => {
             
             if(activity.from.id===element.id)
             {
                 emailad=element.email;
-
-                
             }
         });
         
