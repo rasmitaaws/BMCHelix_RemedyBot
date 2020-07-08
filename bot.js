@@ -54,7 +54,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 switch (modifiedText) {
                 case 'hello':
                 case 'hi':
-                    await context.sendActivity(`You said "${ teamDetails.name }"`);
+                    await context.sendActivity(`You said "${ teamDetails.id }"`);
                     break;
                 case 'update1':
                     await this.testTeams(context);
