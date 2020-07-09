@@ -15,7 +15,7 @@ const {
  
 const TextEncoder = require('util').TextEncoder;
 
-var graphClient=require('./graphClient')
+const graphClie=require('./graphClient')
 // Welcomed User property name
 const WELCOMED_USER = 'welcomedUserProperty';
 class TeamsConversationBot extends TeamsActivityHandler {
@@ -59,8 +59,6 @@ class TeamsConversationBot extends TeamsActivityHandler {
                     await context.sendActivity(`You said "${ teamDetails.id }"`);
                     break;
                 case 'update1':
-
-
                     await this.testTeams(context);
                     break;
                 case 'help':
@@ -156,8 +154,8 @@ this.onMembersAdded(async (context, next) => {
             }
         });
         const teamDetails = await TeamsInfo.getTeamDetails(context);
-        graphClient.updateIncident(emailad,context.activity.conversations.id,teamDetails.name,context)
-     
+        
+       await  graphClie.updateIncident(emailad,context.activity.conversations.id,teamDetails.name);
       
     }
 
