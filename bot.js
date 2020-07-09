@@ -155,11 +155,12 @@ this.onMembersAdded(async (context, next) => {
                 emailad=element.email;
             }
         });
+        
         const teamDetails = await TeamsInfo.getTeamDetails(context);
         
         //let messageDetails= await  updateIncident(emailad.trim(),activity.conversation.id,teamDetails.name.trim());
      
-        await  context.sendActivity(`Your message "${ activity.conversation.id }"`);
+        await  context.sendActivity(`Your message "${ activity.conversation.id}"`);
     }
 
     
