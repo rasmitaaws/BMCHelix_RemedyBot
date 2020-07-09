@@ -142,7 +142,7 @@ const optionsforTokenRequest = {
        var optionsForUserRequest = { 
         url: 'https://graph.microsoft.com/v1.0/users',
         method: 'GET',
-        headers: { 'Authorization' : "Bearer "+access_token,
+        headers: { 'Authorization' : "Bearer "+accessToken,
         'Content-Type': "application/json"
         }
       };
@@ -167,7 +167,7 @@ const optionsforTokenRequest = {
         'Content-Type': "application/json"
         }
       };
-  let messageDetails=await getMessages(optionsForMessages)
+   let messageDetails=await getMessages(optionsForMessages);
 
   await context.sendActivity(` Incident updated with message "${ messageDetails}"`);
 
