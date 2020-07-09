@@ -97,32 +97,45 @@ const optionsforTokenRequest = {
             var todayDate = new Date().toISOString().slice(0,10);
             var contents="";
             var messageJson=JSON.parse(response.body);
-          //  console.log("response :"+JSON.stringify(responseMessage))
-         //   console.log("message :"+JSON.stringify(messageJson.value));
-            _.map( messageJson.value, function(content) {
-             var dateStr=content.createdDateTime;
-             var todaysDateFromMsg=dateStr.substring(0,10);
-         //    console.log("message :"+JSON.stringify(messageJson.value))
-           
-             if(todayDate === todaysDateFromMsg) {                            
-               _.map(content.from,function(data){  
-                 if(JSON.stringify(data) != 'null')            
-                  contents=contents.concat(JSON.stringify(data.displayName));
-                  })
-                  _.map(content.body,function(data1){ 
-                   var jsonObject4=content.body;
-             //      console.log("data:"+JSON.stringify(jsonObject4.content)+data1==="text");
-                   if(data1==="text")  { 
-                   contents=contents.concat(': ',JSON.stringify(jsonObject4.content)+"\n");
-     
-                   }
-                //  }
-                 })
-               } 
+            var isText="N";
+         
+              _.map( messageJson.value, function(content) {
+                var dateStr=content.createdDateTime;
+                var todaysDateFromMsg=dateStr.substring(0,10);
+                if(todayDate === todaysDateFromMsg) {   
+                  _.map(content.body,function(data2){ 
+                    if(data2==="text")
+                    isText="Y";
+                    else
+                    isText="N";
+                                        
+                  _.map(content.from,function(data){    
+                                           
+                    if(JSON.stringify(data) != 'null' ) 
+                    {
+                      if(isText==="Y")                                    
+                     contents=contents.concat(JSON.stringify(data.displayName));
+                     
+                    }
+                     })
+                    }) 
+                     _.map(content.body,function(data1){ 
+                      var jsonObject4=content.body;
+                //      console.log("data:"+JSON.stringify(jsonObject4.content)+data1==="text");
+                      if(data1==="text")  { 
+                      contents=contents.concat(': ',JSON.stringify(jsonObject4.content)+"\n");
+      
+                      }
+                   //  }
+                    })
+                  } 
+                })
+              
+            console.log("contents:::"+contents)
             return resolve(contents);
           
-        });
-        }
+            }
+          
         
           if (error) {
             return reject(error);
@@ -180,10 +193,12 @@ const optionsforTokenRequest = {
 
   async function logvalue()
   {
-  let message = await updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
-
-  console.log(message);
+ // let message = await updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
+  var str="19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2;messageid=1594283239951";
+  var res = str.split(';');
+  console.log(res[0]);
   }
+
 
 
   module.exports = updateIncident;
