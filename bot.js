@@ -158,7 +158,9 @@ this.onMembersAdded(async (context, next) => {
         
         const teamDetails = await TeamsInfo.getTeamDetails(context);
         
-        let messageDetails= await  updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
+        var res = activity.conversation.id.split(';');
+        
+        let messageDetails= await  updateIncident(emailad,res[0],teamDetails.name);
      
         await  context.sendActivity(`Your message "${ messageDetails}"`);
     }
