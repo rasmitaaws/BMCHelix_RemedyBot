@@ -17,7 +17,7 @@ const TextEncoder = require('util').TextEncoder;
 
 
 
-var updateIncident=require('./graphClient.js')
+var updateIncident=require('./graphClient.js');
 // Welcomed User property name
 const WELCOMED_USER = 'welcomedUserProperty';
 class TeamsConversationBot extends TeamsActivityHandler {
@@ -58,7 +58,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 switch (modifiedText) {
                 case 'hello':
                 case 'hi':
-                    await context.sendActivity(`You said "${ teamDetails.id }"`);
+                    await context.sendActivity(`You said "${ context.activity.conversation.id }"`);
                     break;
                 case 'update1':
                     await this.testTeams(context);
