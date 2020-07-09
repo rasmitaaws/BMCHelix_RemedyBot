@@ -155,7 +155,7 @@ this.onMembersAdded(async (context, next) => {
         });
         const teamDetails = await TeamsInfo.getTeamDetails(context);
         
-       await  graphClie.updateIncident(emailad,context.activity.conversations.id,teamDetails.name);
+      return await  graphClie.updateIncident(emailad,context.activity.conversations.id,teamDetails.name);
       
     }
 

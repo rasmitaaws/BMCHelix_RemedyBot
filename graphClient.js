@@ -164,7 +164,7 @@ const optionsforTokenRequest = {
       };
    let messageDetails=await getMessages(optionsForMessages);
   console.log(''+messageDetails);
- await context.sendActivity(` Incident updated with message`);
+  return messageDetails;
 
   }
  
