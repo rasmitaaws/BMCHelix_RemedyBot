@@ -164,7 +164,7 @@ const optionsforTokenRequest = {
       };
    let messageDetails=await getMessages(optionsForMessages);
   console.log(''+messageDetails);
-  return messageDetails;
+  return await messageDetails;
 
   }
  
