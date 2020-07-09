@@ -163,8 +163,8 @@ const optionsforTokenRequest = {
         }
       };
    let messageDetails=await getMessages(optionsForMessages);
-  console.log(''+messageDetails);
-  return await messageDetails;
+  
+  return  messageDetails;
 
   }
  
@@ -178,5 +178,13 @@ const optionsforTokenRequest = {
     headers: { "Content-Type": "application/x-www-form-urlencoded" }
   };
 
- // updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
+  async function logvalue()
+  {
+  let message = await updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
+
+  console.log(message);
+  }
+
+
+  module.exports = updateIncident;
   
