@@ -58,7 +58,7 @@ class TeamsConversationBot extends TeamsActivityHandler {
                 switch (modifiedText) {
                 case 'hello':
                 case 'hi':
-                    await context.sendActivity(`You said "${ context.activity.conversation.id }"`);
+                    await context.sendActivity(`You said "${ context.activity.conversations.id }"`);
                     break;
                 case 'update1':
                     await this.testTeams(context);
@@ -158,7 +158,7 @@ this.onMembersAdded(async (context, next) => {
         
         const teamDetails = await TeamsInfo.getTeamDetails(context);
         
-        //let messageDetails= await  updateIncident(emailad.trim(),activity.conversation.id,teamDetails.name.trim());
+        let messageDetails= await  updateIncident(emailad.trim(),activity.conversation.id,teamDetails.name.trim());
      
         await  context.sendActivity(`Your message "${ activity.conversation.id}"`);
     }
