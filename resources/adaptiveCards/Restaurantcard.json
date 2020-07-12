@@ -5,12 +5,36 @@
   "actions": [
    {
   "type": "Action.Submit",
-  "title": "Click me for messageBack",
+  "title": "Update Incident",
   "data": {
     "msteams": {
         "type": "messageBack",
-        "displayText": "I clicked this button",
-        "text": "text to bots",
+        "displayText": "Update Incident",
+        "text": "Update Incident",
+        "value": "{\"bfKey\": \"bfVal\", \"conflictKey\": \"from value\"}"
+    }
+  }
+},
+{
+  "type": "Action.Submit",
+  "title": "Create Incident",
+  "data": {
+    "msteams": {
+        "type": "messageBack",
+        "displayText": "Create Incident",
+        "text": "Create Incident",
+        "value": "{\"bfKey\": \"bfVal\", \"conflictKey\": \"from value\"}"
+    }
+  }
+},
+{
+  "type": "Action.Submit",
+  "title": "Incident History",
+  "data": {
+    "msteams": {
+        "type": "messageBack",
+        "displayText": "Incident History",
+        "text": "Incident History",
         "value": "{\"bfKey\": \"bfVal\", \"conflictKey\": \"from value\"}"
     }
   }
