@@ -224,8 +224,11 @@ this.onMembersAdded(async (context, next) => {
     }
 
     async sendSuggestedActionsinEndDialogue(turnContext) {
-        var reply = MessageFactory.suggestedActions(['Update Incident','Check IncidentHistory','Create Incident'],'Please continue further exploring ?');
-        await turnContext.sendActivity(reply);
+          
+        await turnContext.sendActivity({
+            text: 'What would you like to explore next ?',
+            attachments: [CardFactory.adaptiveCard(CARDS[0])]
+        });
     }
 
 
