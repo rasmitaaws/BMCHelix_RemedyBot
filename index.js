@@ -12,7 +12,7 @@ const restify = require('restify');
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
-const { BotFrameworkAdapter, UserState, MemoryStorage } = require('botbuilder');
+const { BotFrameworkAdapter, UserState, MemoryStorage, ConversationState } = require('botbuilder');
 
 // This bot's main dialog.
 const { TeamsConversationBot } = require('./bot');
@@ -57,10 +57,13 @@ adapter.onTurnError = onTurnErrorHandler;
 
 
 const memoryStorage = new MemoryStorage();
+const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
 // Create the main dialog.
 // Create the main dialog.
-const myBot = new TeamsConversationBot(userState);
+
+
+const myBot = new TeamsConversationBot(conversationState,userState);
 
 
 // Listen for incoming requests.
@@ -70,6 +73,8 @@ server.post('/api/messages', (req, res) => {
         await myBot.run(context);
     });
 });
+
+
 
 // Listen for Upgrade requests for Streaming.
 server.on('upgrade', (req, socket, head) => {

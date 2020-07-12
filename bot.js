@@ -16,20 +16,38 @@ const {
 const TextEncoder = require('util').TextEncoder;
 
 
+const { CreateIncidentDialogue } = require('./CreateIncidentDialogue.js')
+const {UpdateIncidentDialog }= require('./updateIncidentWorklog')
+var updateIncident=require('./graphClient');
 
-var updateIncident=require('./graphClient.js');
+var updateRemedyWorklog=require('./bmcHelixClient')
 // Welcomed User property name
 const WELCOMED_USER = 'welcomedUserProperty';
+const CONVERSATION_DATA_PROPERTY= 'dialogState';
 class TeamsConversationBot extends TeamsActivityHandler {
-    constructor(userState) {
+    constructor(userState,conversationState) {
         super();
 
-           // Creates a new user property accessor.
+      
+    this.conversationState = conversationState;
+    this.userState = userState;
+    this.dialogState =  this.conversationState.createProperty(CONVERSATION_DATA_PROPERTY);
+    this.conversationData = conversationState.createProperty('conservationData');
+      
+    this.previousIntent = this.conversationState.createProperty("previousIntent");
+    
+    this.createIncidentDialogue = new CreateIncidentDialogue(this.conversationState,this.userState);
+
+    this.updateIncidentDialog = new UpdateIncidentDialog(this.conversationState,this.userState);
+   
+        
+
+    
+         // Creates a new user property accessor.
     // See https://aka.ms/about-bot-state-accessors to learn more about the bot state and state accessors.
     this.welcomedUserProperty = userState.createProperty(WELCOMED_USER);
-
-   
-    this.userState = userState;
+ 
+    
 
    
 
@@ -39,43 +57,38 @@ class TeamsConversationBot extends TeamsActivityHandler {
 
               
        
-           
+            if(context.activity.channelId==='msteams')
+        {
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
-            const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
+           
                // (and only the first time) a user initiates a personal chat with your bot.
                if (didBotWelcomedUser === false) {
                 // The channel should send the user name in the 'From' object
-                const userName = context.activity.from.name;
-                await context.sendActivity('You are seeing this message because this was your first message ever sent to this bot.');
-                await context.sendActivity(`It is a good practice to welcome the user and provide personal greeting. For example, welcome ${ userName }.`);
+                await this.sendWelcomeMessageOnMembersAdded(context);
+
+    
 
                 // Set the flag indicating the bot handled the user's first message.
                 await this.welcomedUserProperty.set(context, true);
-            } else {
+            } 
+        }else {
                 // This example uses an exact match on user's input utterance.
                 // Consider using LUIS or QnA for Natural Language Processing.
-                const text = context.activity.text.toLowerCase();
-                switch (modifiedText) {
-                case 'hello':
-                case 'hi':
-                    await context.sendActivity(`You said "${ context.activity.conversations.id }"`);
-                    break;
-                case 'update1':
-                    await this.testTeams(context);
-                    break;
-                case 'help':
-                    await this.sendIntroCard(context);
-                    break;
-                default:
-                    await context.sendActivity(`This is a simple Welcome Bot sample. You can say 'intro' to
-                                                    see the introduction card. If you are running this bot in the Bot
-                                                    Framework Emulator, press the 'Start Over' button to simulate user joining a bot or a channel`);
+                await this.dispatchToIntentAsync(context);
+        
                 }
            
       
             await next();
-        }});
+        });
 
+
+    this.onDialog(async (context, next) => {
+        // Save any state changes. The load happened during the execution of the Dialog.
+        await this.conversationState.saveChanges(context, false);
+        await this.userState.saveChanges(context, false);
+        await next();
+    }); 
         // Sends welcome messages to conversation members when they join the conversation.
 // Messages are only sent to conversation members who aren't the bot.
 this.onMembersAdded(async (context, next) => {
@@ -86,14 +99,7 @@ this.onMembersAdded(async (context, next) => {
         // context.activity.membersAdded === context.activity.recipient.Id indicates the
         // bot was added to the conversation, and the opposite indicates this is a user.
         if (context.activity.membersAdded[idx].id !== context.activity.recipient.id) {
-            await context.sendActivity('Welcome to the \'Welcome User\' Bot. This bot will introduce you to welcoming and greeting users.');
-            await context.sendActivity("You are seeing this message because the bot received at least one 'ConversationUpdate' " +
-                'event, indicating you (and possibly others) joined the conversation. If you are using the emulator, ' +
-                'pressing the \'Start Over\' button to trigger this event again. The specifics of the \'ConversationUpdate\' ' +
-                'event depends on the channel. You can read more information at https://aka.ms/about-botframework-welcome-user');
-            await context.sendActivity('It is a good pattern to use this event to send general greeting to user, explaining what your bot can do. ' +
-                'In this example, the bot handles \'hello\', \'hi\', \'help\' and \'intro\'. ' +
-                'Try it now, type \'hi\'');
+           await this.sendWelcomeMessageOnMembersAdded(context);
         }
     }
 
@@ -138,33 +144,112 @@ this.onMembersAdded(async (context, next) => {
     }
 
 
-    async testTeams(context) {
+    async dispatchToIntentAsync(context){
+
+        var currentIntent = '';
+        const previousIntent = await this.previousIntent.get(context,{});
         
-        const activity = context.activity;
+        const conversationData = await this.conversationData.get(context,{}); 
+        
+        const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
+        if(previousIntent.intentName && conversationData.endDialog === false )
+        {
+           currentIntent = previousIntent.intentName;
 
-        const connector = context.adapter.createConnectorClient(activity.serviceUrl);
+        }
+        else if (previousIntent.intentName && conversationData.endDialog === true)
+        {
+             currentIntent = modifiedText;
 
-        const response = await connector.conversations.getConversationMembers(activity.conversation.id);
+        }
+        else
+        {
+            currentIntent = modifiedText;
+            await this.previousIntent.set(context,{intentName: modifiedText});
 
-        let emailad='';
+        }
 
-        response.forEach(element => {
-            
-            if(activity.from.id===element.id)
-            {
-                emailad=element.email;
+       
+    switch(currentIntent)
+    {
+       
+        case 'Create Incident':
+        console.log("Inside Make Reservation Case");
+   
+        await this.conversationData.set(context,{endDialog: false});
+        await this.createIncidentDialogue.run(context,this.dialogState);
+        conversationData.endDialog = await this.createIncidentDialogue.isDialogComplete();
+        if(conversationData.endDialog)
+        {
+            await this.sendSuggestedActionsinEndDialogue(context);
+
+        }
+        
+        break;
+
+        case 'Update Incident':
+            console.log("Update Incident");
+         
+            await this.conversationData.set(context,{endDialog: false});
+            await this.updateIncidentDialog.run(context,this.dialogState);
+            conversationData.endDialog = await this.updateIncidentDialog.isDialogComplete();
+            if(conversationData.endDialog)
+            {   
+                await this.previousIntent.set(context,{intentName: null});
+                await this.sendSuggestedActions(context);
+    
             }
-        });
-        
-        const teamDetails = await TeamsInfo.getTeamDetails(context);
-        
-        var res = activity.conversation.id.split(';');
-        
-        let messageDetails= await  updateIncident(emailad,res[0],teamDetails.name);
-     
-        await  context.sendActivity(`Your message "${ messageDetails}"`);
+            
+            break;
+
+
+
+        default:
+            console.log("Did not match with any  case");
+            break;
     }
 
-    
+
+    }
+
+ 
+
+    async sendWelcomeMessage(turnContext) {
+        const { activity } = turnContext;
+
+   
+                const welcomeMessage = `Welcome to BmcHelix Bot ${ activity.from.name }. `;
+                await turnContext.sendActivity(welcomeMessage);
+                await this.sendSuggestedActions(turnContext);
+            
+        
+    }
+
+    async sendWelcomeMessageOnMembersAdded(turnContext) {
+        const { activity } = turnContext;
+
+        // Iterate over all new members added to the conversation.
+        for (const idx in activity.membersAdded) {
+            if (activity.membersAdded[idx].id !== activity.recipient.id) {
+                const welcomeMessage = `Welcome to BmcHelix  Bot ${ activity.membersAdded[idx].name }. `;
+                await turnContext.sendActivity(welcomeMessage);
+                await this.sendSuggestedActions(turnContext);
+            }
+        }
+    }
+
+
+    async sendSuggestedActions(turnContext) {
+        var reply = MessageFactory.suggestedActions(['Update Incident','Check IncidentHistory','Create Incident'],'What would you like to do today ?');
+        await turnContext.sendActivity(reply);
+    }
+
+    async sendSuggestedActionsinEndDialogue(turnContext) {
+        var reply = MessageFactory.suggestedActions(['Update Incident','Check IncidentHistory','Create Incident'],'Please continue further exploring ?');
+        await turnContext.sendActivity(reply);
+    }
+
+
+
 }
 module.exports.TeamsConversationBot = TeamsConversationBot;
