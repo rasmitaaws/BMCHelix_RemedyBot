@@ -2,21 +2,15 @@
   "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
-  "actions": [
+  "buttons": [
     {
-      "type": "Action.Submit",
-      "title": "Update Incident",
-      "data": "Update Incident"
-    },
-  {
-      "type": "Action.Submit",
-      "title": "Create Incident",
-      "data": "Create Incident"
-    },
-  {
-      "type": "Action.Submit",
-      "title": "Incident History",
-      "data": "Incident History"
-    }
+      "type": "messageBack",
+      "title": "My MessageBack button",
+      "displayText": "I clicked this button",
+      "text": "User just clicked the MessageBack button",
+      "value": "{\"property\": \"propertyValue\" }"
+      }
   ]
+    
+  
 }
