@@ -1,53 +1,22 @@
 {
-    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-    "type": "AdaptiveCard",
-    "version": "1.0",
-    "body": [
-      {
-        "speak": "Samosa Wallla is a Samosa restaurant which is rated 9.3 by customers.",
-        "type": "ColumnSet",
-        "columns": [
-          {
-            "type": "Column",
-            "width": 2,
-            "items": [
-              {
-                "type": "TextBlock",
-                "text": "Samosa"
-              },
-              {
-                "type": "TextBlock",
-                "text": "Samosa Walla",
-                "weight": "bolder",
-                "size": "extraLarge",
-                "spacing": "none"
-              },
-              {
-                "type": "TextBlock",
-                "text": "9.3 ★★★★★★★★★☆ (1100) · $$",
-                "isSubtle": true,
-                "spacing": "none"
-              },
-              {
-                "type": "TextBlock",
-                "text": "**Ankur G. said** \"I'm compelled to give this place 10 stars due to the number of times I've chosen to eat here this past year!\"",
-                "size": "small",
-                "wrap": true
-              }
-            ]
-          },
-          {
-            "type": "Column",
-            "width": 1,
-            "items": [
-              {
-                "type": "Image",
-                "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqkVLWhbzSBTX9OV26DMDQZBdu_AAhHM-JOKtjDYwPQHlIGXra&s",
-                "size": "auto"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
+  "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+  "type": "AdaptiveCard",
+  "version": "1.0",
+  "actions": [
+    {
+      "type": "Action.Submit",
+      "title": "Update Incident",
+      "data": "Update Incident"
+    },
+  {
+      "type": "Action.Submit",
+      "title": "Create Incident",
+      "data": "Create Incident"
+    },
+  {
+      "type": "Action.Submit",
+      "title": "Incident History",
+      "data": "Incident History"
+    }
+  ]
+}
