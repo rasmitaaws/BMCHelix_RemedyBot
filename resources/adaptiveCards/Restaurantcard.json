@@ -2,15 +2,19 @@
   "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
   "type": "AdaptiveCard",
   "version": "1.0",
-  "buttons": [
-    {
-      "type": "messageBack",
-      "title": "My MessageBack button",
-      "displayText": "I clicked this button",
-      "text": "User just clicked the MessageBack button",
-      "value": "{\"property\": \"propertyValue\" }"
-      }
-  ]
+  "actions": [
+   {
+  "type": "Action.Submit",
+  "title": "Click me for messageBack",
+  "data": {
+    "msteams": {
+        "type": "messageBack",
+        "displayText": "I clicked this button",
+        "text": "text to bots",
+        "value": "{\"bfKey\": \"bfVal\", \"conflictKey\": \"from value\"}"
+    }
+  }
+}
     
-  
+  ]
 }
