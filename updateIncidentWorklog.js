@@ -70,7 +70,7 @@ endDialog = false;
 // Running a prompt here means the next WaterfallStep will be run when the users response is received.
 await step.context.sendActivity({
     text: 'Enter Incident Number::',
-    attachments: [CardFactory.adaptiveCard(CARDS[0])]
+ 
 });
 
 return await step.prompt(TEXT_PROMPT, '');
