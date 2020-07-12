@@ -55,23 +55,16 @@ class TeamsConversationBot extends TeamsActivityHandler {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
 
-              
-       
-            if(context.activity.channelId==='msteams')
-        {
             const didBotWelcomedUser = await this.welcomedUserProperty.get(context, false);
-           
-               // (and only the first time) a user initiates a personal chat with your bot.
-               if (didBotWelcomedUser === false) {
+       
+            if (didBotWelcomedUser === false) {
                 // The channel should send the user name in the 'From' object
-                await this.sendWelcomeMessageOnMembersAdded(context);
-
-    
-
+                const userName = context.activity.from.name;
+                
+                await this.sendSuggestedActions(context);
                 // Set the flag indicating the bot handled the user's first message.
                 await this.welcomedUserProperty.set(context, true);
-            } 
-        }else {
+            } else {
                 // This example uses an exact match on user's input utterance.
                 // Consider using LUIS or QnA for Natural Language Processing.
                 await this.dispatchToIntentAsync(context);
@@ -205,7 +198,9 @@ this.onMembersAdded(async (context, next) => {
 
 
         default:
-            console.log("Did not match with any  case");
+              // The channel should send the user name in the 'From' object
+              await this.sendWelcomeMessageOnMembersAdded(context);
+
             break;
     }
 
