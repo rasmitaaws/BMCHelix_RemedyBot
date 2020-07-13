@@ -124,6 +124,8 @@ this.onMembersAdded(async (context, next) => {
         const conversationData = await this.conversationData.get(context,{}); 
         
         const modifiedText = TurnContext.removeMentionText(context.activity, context.activity.recipient.id);
+
+        
         if(previousIntent.intentName && conversationData.endDialog === false )
         {
            currentIntent = previousIntent.intentName;
@@ -153,6 +155,7 @@ this.onMembersAdded(async (context, next) => {
         conversationData.endDialog = await this.createIncidentDialogue.isDialogComplete();
         if(conversationData.endDialog)
         {
+            await this.previousIntent.set(context,{intentName: null});
             await this.sendSuggestedActionsinEndDialogue(context);
 
         }
