@@ -93,11 +93,19 @@ async summaryStep(step){
     if(step.result===true)
     {
       // Business logic
-      await this.testTeams(step.context);
+    endDialog=await this.testTeams(step.context,step.values.incidentNo);
 
+if(endDialog===true)
+{
+    return await step.endDialog();    
+}
+else
+{
       await step.context.sendActivity("Incident successfully updated")
       endDialog = true;
       return await step.endDialog();   
+
+    }
     
     }
 
@@ -110,7 +118,7 @@ async isDialogComplete(){
     return endDialog;
 }
 
-async testTeams(context) {
+async testTeams(context,inc) {
 
         
         
@@ -138,13 +146,13 @@ async testTeams(context) {
     var res = activity.conversation.id.split(';');
     
     let messageDetails= await  updateIncident(emailad,res[0],teamDetails.name);
-    let updateStatusCode= await updateRemedyWorklog(messageDetails);
+    let updateStatusCode= await updateRemedyWorklog(messageDetails,inc,step);
     await  context.sendActivity(`Your message 'Remedy updated success fully' '${updateStatusCode}' `);
 }
 else
 {
      let messageDetails= await  updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
-    let updateStatusCode= await updateRemedyWorklog(messageDetails);
+    let updateStatusCode= await updateRemedyWorklog(messageDetails,inc);
     await  context.sendActivity(`Your message 'Remedy updated success fully' '${updateStatusCode}' `);
 }
    

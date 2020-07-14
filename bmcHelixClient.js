@@ -77,13 +77,13 @@ var httpClient = new HttpClient();
   }
 
 
-  async function updateRemedyWorklog(messages)
+  async function updateRemedyWorklog(messages,inc)
   {
-    
+    try{
    let remedyToken=await getRemedyToken(optionsForRemedyTokenRequest);
 
    console.log("remedy TOken: "+remedyToken)
-   var inc='INC000000003102';
+   //var inc='INC000000003102';
    var optionsForRemedyGetEntryRequest = { 
     url: "http://VTRVITSTP-03:8008/api/arsys/v1/entry/HPD:IncidentInterface?q='Incident Number'=\""+inc+"\"",
     method: 'GET',
@@ -118,7 +118,13 @@ var httpClient = new HttpClient();
 
   console.log("update incident status code:"+JSON.stringify(updateStatusCode))
   return  updateStatusCode;
-
+    }
+    catch
+    {
+      endDialog=true;
+      return await  endDialog;
+    }
+  
   }
  
  
