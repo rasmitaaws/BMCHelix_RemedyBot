@@ -151,7 +151,7 @@ async testTeams(context,inc) {
 }
 else
 {
-     let messageDetails= await  updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
+    let messageDetails= await  updateIncident('rasmiawsact02@gmail.com','19:57e2067bdc2c4623a1055d4ecb5bcf0a@thread.tacv2','CPA_POC');
     let updateStatusCode= await updateRemedyWorklog(messageDetails,inc);
     await  context.sendActivity(`Your message 'Remedy updated success fully' '${updateStatusCode}' `);
 }
