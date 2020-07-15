@@ -148,7 +148,7 @@ this.onMembersAdded(async (context, next) => {
     {
        
         case 'Create Incident':
-        console.log("Inside Make Reservation Case");
+        console.log("Inside Create Incident Case");
    
         await this.conversationData.set(context,{endDialog: false});
         await this.createIncidentDialogue.run(context,this.dialogState);

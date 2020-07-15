@@ -8,8 +8,6 @@ const {DialogSet, DialogTurnStatus } = require('botbuilder-dialogs');
 const CHOICE_PROMPT    = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT   = 'CONFIRM_PROMPT';
 const TEXT_PROMPT      = 'TEXT_PROMPT';
-const NUMBER_PROMPT    = 'NUMBER_PROMPT';
-const DATETIME_PROMPT  = 'DATETIME_PROMPT';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 var endDialog ='';
 
@@ -23,22 +21,21 @@ constructor(conversationState,userState) {
 this.addDialog(new TextPrompt(TEXT_PROMPT));
 this.addDialog(new ChoicePrompt(CHOICE_PROMPT));
 this.addDialog(new ConfirmPrompt(CONFIRM_PROMPT));
-this.addDialog(new NumberPrompt(NUMBER_PROMPT,this.noOfParticipantsValidator));
-this.addDialog(new DateTimePrompt(DATETIME_PROMPT));
+
 
 
 this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
     this.firstStep.bind(this),  // Ask confirmation if user wants to create incident?
-    this.getName.bind(this),    // Get name from user
-    this.getNumberOfParticipants.bind(this),  // 
-    this.getDate.bind(this), // Date of creation
-    this.getTime.bind(this),  // Time of creation
+    this.getFirstName.bind(this),   
+    this.getLastName.bind(this), 
+    this.getTemplateId.bind(this), 
+    this.getDescription.bind(this), 
+    this.getLoginId.bind(this), // Get name from user
+    this.getServiceType.bind(this),  // 
     this.confirmStep.bind(this), // Show summary of values entered by user and ask confirmation to create incident
     this.summaryStep.bind(this)
            
 ]));
-
-
 
 
 this.initialDialogId = WATERFALL_DIALOG;
@@ -64,12 +61,12 @@ return await step.prompt(CONFIRM_PROMPT, 'Would you like to create a new inciden
       
 }
 
-async getName(step){
+async getFirstName(step){
      
     console.log(step.result)
     if(step.result === true)
     { 
-    return await step.prompt(TEXT_PROMPT, 'What should be the description of incident?');
+    return await step.prompt(TEXT_PROMPT, 'What should be FirstName?');
     }
     if(step.result === false)
     { 
@@ -80,32 +77,73 @@ async getName(step){
 
 }
 
-async getNumberOfParticipants(step){
+
+async getLastName(step){
      
-    step.values.name = step.result
-    return await step.prompt(NUMBER_PROMPT, 'How many participants ( 1 - 150)?');
+    step.values.firstName=step.result
+
+    console.log(step.result);
+   
+    return await step.prompt(TEXT_PROMPT, 'What should be the LastName?');
+   
+
 }
 
-async getDate(step){
+async getTemplateId(step){
 
-    step.values.noOfParticipants = step.result
+     step.values.lastName=step.result
 
-    return await step.prompt(DATETIME_PROMPT, 'On which date you want to create the incident?')
+    console.log(step.result);
+   
+    return await step.prompt(TEXT_PROMPT, 'What should be the Template for incident?');
+   
+
 }
 
-async getTime(step){
 
-    step.values.date = step.result
 
-    return await step.prompt(DATETIME_PROMPT, 'At what time?')
+async getDescription(step){
+     
+    step.values.templateId=step.result
+    console.log(step.result)
+
+    
+    return await step.prompt(TEXT_PROMPT, 'What should be the description of incident?');
+   
+
 }
+
+
+async getLoginId(step){
+
+     step.values.description=step.result
+
+    console.log(step.result)
+   
+    return await step.prompt(TEXT_PROMPT, 'What should be the LoginId to create incident?');
+  
+    }
+
+
+
+async getServiceType(step){
+
+     step.values.loginId=step.result
+    console.log(step.result)
+    
+    return await step.prompt(TEXT_PROMPT, 'What should be the ServiceType .?');
+   
+
+}
+
+
 
 
 async confirmStep(step){
 
-    step.values.time = step.result
+    step.values.serviceType = step.result
 
-    var msg = ` You have entered following values: \n Name: ${step.values.name}\n Participants: ${step.values.noOfParticipants}\n Date: ${JSON.stringify(step.values.date)}\n Time: ${JSON.stringify(step.values.time)}`
+    var msg = ` You have entered following values: \n Name: ${step.values.firstName}\n Participants: ${step.values.lastName}\n Date: ${JSON.stringify(step.values.templateId)}\n Time: ${JSON.stringify(step.values.loginId)}`
 
     await step.context.sendActivity(msg);
 
