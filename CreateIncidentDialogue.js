@@ -143,7 +143,7 @@ async confirmStep(step){
 
     step.values.serviceType = step.result
 
-    var msg = ` You have entered following values: \n Name: ${step.values.firstName}\n Participants: ${step.values.lastName}\n Date: ${JSON.stringify(step.values.templateId)}\n Time: ${JSON.stringify(step.values.loginId)}`
+    var msg = ` You have entered following values: \n FirstName: ${step.values.firstName}\n LastName: ${step.values.lastName}\n TemplateId: ${JSON.stringify(step.values.templateId)}\n LoginId: ${JSON.stringify(step.values.loginId)}`
 
     await step.context.sendActivity(msg);
 
