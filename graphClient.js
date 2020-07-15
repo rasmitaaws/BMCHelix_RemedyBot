@@ -145,7 +145,8 @@ const optionsforTokenRequest = {
   }
   async function updateIncident(userEmailId,channelId,teamName)
   {
-    try{
+    
+   
     let accessToken = await getTokenRestCall(optionsforTokenRequest);
        //  console.log("access token:"+access_token) userAPI CALL
        var optionsForUserRequest = { 
@@ -177,13 +178,13 @@ const optionsforTokenRequest = {
         }
       };
    let messageDetails=await getMessages(optionsForMessages);
-   return  messageDetails;
-    }
-    catch
-    {
-      endDilaog=true;
-      return await endDilaog;
-    }
+  
+    return await messageDetails;
+    
+   
+   
+    
+   
  
 
   }

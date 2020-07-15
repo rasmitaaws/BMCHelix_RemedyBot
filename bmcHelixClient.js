@@ -79,7 +79,7 @@ var httpClient = new HttpClient();
 
   async function updateRemedyWorklog(messages,inc)
   {
-    try{
+
    let remedyToken=await getRemedyToken(optionsForRemedyTokenRequest);
 
    console.log("remedy TOken: "+remedyToken)
@@ -117,13 +117,12 @@ var httpClient = new HttpClient();
   let updateStatusCode=await updateRemedyIncident(optionsForIncidentUpdateRequest);
 
   console.log("update incident status code:"+JSON.stringify(updateStatusCode))
-  return  updateStatusCode;
-    }
-    catch
-    {
-      endDialog=true;
-      return await  endDialog;
-    }
+
+  return await updateStatusCode;
+
+    
+  
+    
   
   }
  

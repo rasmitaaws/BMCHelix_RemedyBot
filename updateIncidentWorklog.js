@@ -93,19 +93,22 @@ async summaryStep(step){
     if(step.result===true)
     {
       // Business logic
-    endDialog=await this.testTeams(step.context,step.values.incidentNo);
+      try{
+    await this.testTeams(step.context,step.values.incidentNo);
 
-if(endDialog===true)
-{
-    return await step.endDialog();    
-}
-else
-{
+
+
       await step.context.sendActivity("Incident successfully updated")
       endDialog = true;
       return await step.endDialog();   
 
-    }
+      }
+      catch
+      {
+        endDialog=true;
+        return await step.endDialog();   
+
+      }
     
     }
 
